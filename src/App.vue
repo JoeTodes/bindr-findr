@@ -6,6 +6,7 @@
 
 <script>
 import Submission from "./components/Submission.vue";
+import axios from "axios";
 
 export default {
   name: "app",
@@ -14,12 +15,31 @@ export default {
   },
   data() {
     return {
-      cardListText: ""
+      cardListText: "",
+      cardName: "",
+      printings: ""
     };
   },
   methods: {
     parseInput() {
-      console.log("entered list is: " + this.cardListText);
+      this.cardName = this.cardListText;
+
+      axios
+        .get(
+          "https://api.scryfall.com/cards/search?q=" +
+            this.cardName +
+            "&unique=prints"
+        )
+        .then(res => {
+          this.printings = res;
+          //for (const card of this.printings.data.cards) {
+          //  console.log(card.set);
+          //}
+        })
+        .catch(err => {
+          // handle error
+          console.log(err);
+        });
     }
   }
 };
