@@ -29,14 +29,21 @@ export default {
     },
     methods: {
         onSubmit() {
+            this.clearSets();
             this.parseInput();
             this.getData();
+        },
+        clearSets() {
+            this.sets = {};
         },
         parseInput() {
             //TODO
         },
         getData() {
-            this.cardName = this.cardListText;
+            this.cardName = this.cardListText.replace(
+                /(?:\r\n|\r|\n)/g,
+                '"+OR+"'
+            );
 
             axios
                 .get(
