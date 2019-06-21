@@ -23,8 +23,9 @@ export default {
         return {
             cardListText: "",
             cardName: "",
-            printings: "",
-            sets: {}
+            queryResult: "",
+            sets: {},
+            cardsReceived: false
         };
     },
     methods: {
@@ -40,10 +41,8 @@ export default {
             //TODO
         },
         getData() {
-            this.cardName = this.cardListText.replace(
-                /(?:\r\n|\r|\n)/g,
-                '"+OR+"'
-            );
+            this.cardName = this.cardListText.replace(/ /g, "+");
+            this.cardName = this.cardName.replace(/(?:\r\n|\r|\n)/g, '"+OR+!"');
 
             axios
                 .get(
@@ -52,28 +51,47 @@ export default {
                         '"&unique=prints'
                 )
                 .then(res => {
-                    this.printings = res;
-                    for (const card of this.printings.data.data) {
-                        if (card.promo) {
-                            break;
-                        }
-
-                        if (!Object.keys(this.sets).includes(card.set)) {
-                            this.$set(this.sets, card.set, {
-                                setName: card.set_name,
-                                cards: [card],
-                                setUri: card.set_uri
-                            });
-                            //this.sets[card.set] = [];
-                        } else {
-                            this.sets[card.set].cards.push(card);
-                        }
-                    }
+                    this.queryResult = res;
+                    this.populateSets();
+                    this.getHasMore();
                 })
                 .catch(err => {
                     // handle error
                     console.log(err);
                 });
+        },
+        getHasMore() {
+            if (this.queryResult.data.has_more) {
+                axios.get(this.queryResult.data.next_page).then(res => {
+                    this.queryResult = res;
+                    this.populateSets();
+                    this.getHasMore();
+                });
+            }
+        },
+        populateSets() {
+            for (const card of this.queryResult.data.data) {
+                if (
+                    card.promo ||
+                    card.set_type == "planechase" ||
+                    card.set_type == "duel_deck" ||
+                    card.set_type == "box" ||
+                    card.set_type == "spellbook"
+                ) {
+                    continue;
+                }
+
+                if (!Object.keys(this.sets).includes(card.set)) {
+                    this.$set(this.sets, card.set, {
+                        setName: card.set_name,
+                        cards: [card],
+                        setUri: card.set_uri
+                    });
+                    //this.sets[card.set] = [];
+                } else {
+                    this.sets[card.set].cards.push(card);
+                }
+            }
         }
     }
 };
