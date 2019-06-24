@@ -3,7 +3,12 @@
         <div class="card-header">{{set.setName}}</div>
         <div class="card-body">
             <div class="row">
-                <CardView v-for="card in set.cards" :key="card.id" :card="card"></CardView>
+                <CardView
+                    @rem-printing="removePrinting"
+                    v-for="card in set.cards"
+                    :key="card.id"
+                    :card="card"
+                ></CardView>
             </div>
         </div>
     </div>
@@ -18,9 +23,15 @@ export default {
     },
     props: {
         set: {
+            setCode: String,
             setName: String,
             cards: [],
             setUri: String
+        }
+    },
+    methods: {
+        removePrinting(cardName) {
+            this.$emit("rem-printing", this.set.setCode, cardName);
         }
     }
 };

@@ -1,8 +1,9 @@
 <template>
     <div id="app">
         <Submission @cards-submitted="onSubmit" v-model="cardListText"></Submission>
-        <div v-for="set in sets" :key="set.setName">
-            <set-view :set="set"></set-view>
+
+        <div v-for="set in sortedSetNames" :key="set">
+            <set-view :set="sets[set]"></set-view>
         </div>
     </div>
 </template>
@@ -25,7 +26,8 @@ export default {
             cardName: "",
             queryResult: "",
             sets: {},
-            cardsReceived: false
+            cardsReceived: false,
+            sortedSetNames: []
         };
     },
     methods: {
@@ -48,7 +50,7 @@ export default {
                 .get(
                     'https://api.scryfall.com/cards/search?q=!"' +
                         this.cardName +
-                        '"&unique=prints'
+                        '"&unique=prints&order=color'
                 )
                 .then(res => {
                     this.queryResult = res;
@@ -66,6 +68,7 @@ export default {
                     this.queryResult = res;
                     this.populateSets();
                     this.getHasMore();
+                    this.sortSets();
                 });
             }
         },
@@ -81,18 +84,51 @@ export default {
                     continue;
                 }
 
+                if (card.set_type == "commander") {
+                    card.set = "cmdr";
+                    card.set_name = "Commander Sets";
+                }
+
                 if (!Object.keys(this.sets).includes(card.set)) {
                     this.$set(this.sets, card.set, {
+                        setCode: card.set,
                         setName: card.set_name,
                         cards: [card],
                         setUri: card.set_uri
                     });
-                    //this.sets[card.set] = [];
                 } else {
-                    this.sets[card.set].cards.push(card);
+                    if (
+                        !this.setContainsCardName(
+                            this.sets[card.set],
+                            card.name
+                        )
+                    ) {
+                        this.sets[card.set].cards.push(card);
+                    }
                 }
             }
-        }
+        },
+        sortSets() {
+            this.sortedSetNames = Object.keys(this.sets);
+
+            this.sortedSetNames.sort((a, b) => {
+                var aLen = this.sets[a].cards.length;
+                var bLen = this.sets[b].cards.length;
+                //console.log("a: " + this.aLen + " b: " + this.bLen);
+                return bLen - aLen;
+            });
+            this.$forceUpdate;
+        },
+        setContainsCardName(set, cardName) {
+            for (let index = 0; index < set.cards.length; index++) {
+                if (set.cards[index].name === cardName) {
+                    return true;
+                }
+            }
+
+            return false;
+        },
+        removeCardFromSet(cardName, setCode) {}
     }
 };
 </script>
