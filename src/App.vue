@@ -3,7 +3,7 @@
         <Submission @cards-submitted="onSubmit" v-model="cardListText"></Submission>
 
         <div v-for="set in sortedSetNames" :key="set">
-            <set-view :set="sets[set]"></set-view>
+            <set-view @rem-card="removeAllCards" @rem-printing="removePrinting" :set="sets[set]"></set-view>
         </div>
     </div>
 </template>
@@ -30,6 +30,7 @@ export default {
             sortedSetNames: []
         };
     },
+    computed: {},
     methods: {
         onSubmit() {
             this.clearSets();
@@ -37,7 +38,12 @@ export default {
             this.getData();
         },
         clearSets() {
-            this.sets = {};
+            Object.keys(this.sets).forEach(setCode => {
+                var set = this.sets[setCode];
+                if (set.cards) {
+                    set.cards = [];
+                }
+            });
         },
         parseInput() {
             //TODO
@@ -70,6 +76,8 @@ export default {
                     this.getHasMore();
                     this.sortSets();
                 });
+            } else {
+                this.sortSets();
             }
         },
         populateSets() {
@@ -128,7 +136,22 @@ export default {
 
             return false;
         },
-        removeCardFromSet(cardName, setCode) {}
+        removePrinting(setCode, card) {
+            var index = this.sets[setCode].cards.indexOf(card);
+            if (index != -1) {
+                this.sets[setCode].cards.splice(index, 1);
+            }
+        },
+        removeAllCards(cardName) {
+            Object.keys(this.sets).forEach(setCode => {
+                var set = this.sets[setCode];
+                for (var i = 0; i < set.cards.length; i++) {
+                    if (set.cards[i].name === cardName) {
+                        set.cards.splice(i, 1);
+                    }
+                }
+            });
+        }
     }
 };
 </script>

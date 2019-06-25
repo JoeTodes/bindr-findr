@@ -1,9 +1,10 @@
 <template>
-    <div class="card mx-auto w-75 my-5 bg-secondary border-dark text-light">
+    <div v-show="hasLength" class="card mx-auto w-75 my-5 bg-secondary border-dark text-light">
         <div class="card-header">{{set.setName}}</div>
         <div class="card-body">
             <div class="row">
                 <CardView
+                    @rem-card="removeCard"
                     @rem-printing="removePrinting"
                     v-for="card in set.cards"
                     :key="card.id"
@@ -29,9 +30,17 @@ export default {
             setUri: String
         }
     },
+    computed: {
+        hasLength: function() {
+            return this.set.cards.length > 0 ? true : false;
+        }
+    },
     methods: {
-        removePrinting(cardName) {
-            this.$emit("rem-printing", this.set.setCode, cardName);
+        removePrinting(card) {
+            this.$emit("rem-printing", this.set.setCode, card);
+        },
+        removeCard(cardName) {
+            this.$emit("rem-card", cardName);
         }
     }
 };

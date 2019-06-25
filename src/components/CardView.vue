@@ -6,7 +6,7 @@
             </div>
             <div class="row">
                 <button
-                    @click="$emit('rem-printing', card.name)"
+                    @click="$emit('rem-printing', card)"
                     class="text-nowrap col-6 btn btn-warning btn-sm"
                     style="overflow:hidden;"
                 >
@@ -14,7 +14,7 @@
                     <br>Printing
                 </button>
                 <button
-                    @click="$emit('rem-card')"
+                    @click="$emit('rem-card', card.name)"
                     class="text-nowrap col-6 btn btn-success btn-sm"
                     style="overflow:hidden;"
                 >
