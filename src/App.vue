@@ -128,7 +128,9 @@ export default {
           card.set_type == "planechase" ||
           card.set_type == "duel_deck" ||
           card.set_type == "box" ||
-          card.set_type == "spellbook"
+          card.set_type == "spellbook" ||
+          card.set_type == "premium_deck" ||
+          !card.games.includes("paper")
         ) {
           continue;
         }
