@@ -1,15 +1,35 @@
 <template>
-    <div v-show="hasLength" class="card mx-auto w-75 my-5 bg-secondary border-dark text-light">
-        <div class="card-header">{{set.setName}}</div>
-        <div class="card-body">
+    <div v-show="hasLength" class="card mx-auto w-75 my-0 bg-secondary border-dark text-light">
+        <div
+            class="card-header py-0"
+            @mouseover="hover = true"
+            @mouseleave="hover = false"
+            data-toggle="collapse"
+            :data-target="'#'+set.setCode"
+            :class="{ active: hover }"
+        >
             <div class="row">
-                <CardView
-                    @rem-card="removeCard"
-                    @rem-printing="removePrinting"
-                    v-for="card in set.cards"
-                    :key="card.id"
-                    :card="card"
-                ></CardView>
+                <div class="col align-self-center py-3 pl-1">
+                    <span class="badge badge-warning">{{this.set.cards.length}}</span>
+                    {{set.setName}}
+                </div>
+                <img
+                    class="col-1 img-fluid p-2"
+                    :src="'https://img.scryfall.com/sets/'+this.set.setCode+'.svg'"
+                >
+            </div>
+        </div>
+        <div class="collapse" :id="set.setCode" data-parent="#accordion">
+            <div class="card-body">
+                <div class="row">
+                    <CardView
+                        @rem-card="removeCard"
+                        @rem-printing="removePrinting"
+                        v-for="card in set.cards"
+                        :key="card.id"
+                        :card="card"
+                    ></CardView>
+                </div>
             </div>
         </div>
     </div>
@@ -22,6 +42,11 @@ export default {
     components: {
         CardView
     },
+    data() {
+        return {
+            hover: false
+        };
+    },
     props: {
         set: {
             setCode: String,
@@ -30,6 +55,7 @@ export default {
             setUri: String
         }
     },
+
     computed: {
         hasLength: function() {
             return this.set.cards.length > 0 ? true : false;
@@ -45,4 +71,11 @@ export default {
     }
 };
 </script>
+
+<style scoped>
+.active {
+    background-color: rgb(138, 144, 150);
+}
+</style>
+
 

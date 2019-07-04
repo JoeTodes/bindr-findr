@@ -1,9 +1,9 @@
 <template>
-    <div class="card mx-auto w-50 mt-5 bg-secondary border-dark">
+    <div class="card mx-auto w-75 my-5 bg-secondary border-dark">
         <div class="collapse show" id="body">
-            <div class="card-body">
+            <div class="card-body pt-3 px-4">
                 <div class="form-group">
-                    <label for="cardListEntry" class="text-light">Card List</label>
+                    <label for="cardListEntry" class="text-light pb-1">Card List</label>
                     <textarea
                         v-model="cardlistText"
                         v-on:input="$emit('input', $event.target.value)"
