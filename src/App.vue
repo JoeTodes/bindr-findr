@@ -1,7 +1,7 @@
 <template>
     <div id="app">
-        <div class="jumbotron mt-2 py-1 bg-secondary border-dark text-light">
-            <h1 class="display-4">MTG Binder Finder</h1>
+        <div class="card mx-auto w-75 mt-2 py-1 bg-secondary border-dark text-light">
+            <h1 class="display-4 text-center">MTG Binder Finder</h1>
         </div>
 
         <Submission @cards-submitted="onSubmit" v-model="cardListText"></Submission>
