@@ -14,7 +14,7 @@
                     {{set.setName}}
                 </div>
                 <img
-                    class="col-1 img-fluid p-2"
+                    class="col-2 col-sm-2 col-md-1 img-fluid p-2"
                     :src="'https://img.scryfall.com/sets/'+this.set.setCode+'.svg'"
                 >
             </div>
