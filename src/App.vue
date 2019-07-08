@@ -1,6 +1,19 @@
 <template>
     <div id="app">
+        <div class="jumbotron mt-2 py-1 bg-secondary border-dark text-light">
+            <h1 class="display-4">MTG Binder Finder</h1>
+        </div>
+
         <Submission @cards-submitted="onSubmit" v-model="cardListText"></Submission>
+
+        <div class="mx-auto w-75">
+            <button
+                @click="sortSets"
+                v-if="cardsReceived"
+                class="mb-2 btn btn-warning border-dark justify-self-right"
+            >Re-Sort</button>
+        </div>
+
         <div id="accordion">
             <div v-for="set in sortedSetNames" :key="set">
                 <set-view
@@ -33,13 +46,16 @@ export default {
             cardNames: "",
             queryResult: "",
             sets: {},
-            cardsReceived: false,
             parsedCards: {},
             queryText: "",
             sortedSetNames: []
         };
     },
-    computed: {},
+    computed: {
+        cardsReceived: function() {
+            return Object.keys(this.sets).length > 1;
+        }
+    },
     methods: {
         onSubmit() {
             this.clearSets();

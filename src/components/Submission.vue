@@ -1,5 +1,5 @@
 <template>
-    <div class="card mx-auto w-75 my-5 bg-secondary border-dark">
+    <div class="card mx-auto w-75 mt-3 mb-3 bg-secondary border-dark">
         <div class="collapse show" id="body">
             <div class="card-body pt-3 px-4">
                 <div class="form-group">
