@@ -1,7 +1,7 @@
 <template>
     <div id="app">
         <div class="card mx-auto w-75 mt-2 py-1 bg-secondary border-dark text-light">
-            <h1 class="display-4 text-center">MTG Binder Finder</h1>
+            <h1 class="text-center">MTG Binder Finder</h1>
         </div>
 
         <Submission @cards-submitted="onSubmit" v-model="cardListText"></Submission>
@@ -32,6 +32,7 @@ import SetView from "./components/SetView.vue";
 import axios from "axios";
 import Vue from "vue";
 import mtgparser from "mtg-parser";
+import $ from "jquery";
 
 export default {
     name: "app",
@@ -50,6 +51,12 @@ export default {
             queryText: "",
             sortedSetNames: []
         };
+    },
+    mounted: function() {
+        $('[data-toggle="popover"]').popover({
+            trigger: "focus",
+            html: true
+        });
     },
     computed: {
         cardsReceived: function() {
@@ -227,4 +234,7 @@ export default {
 </script>
 
 <style>
+.popover {
+    max-width: 50%;
+}
 </style>

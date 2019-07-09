@@ -13,8 +13,9 @@
                     <span class="badge badge-warning">{{this.set.cards.length}}</span>
                     {{set.setName}}
                 </div>
+
                 <img
-                    class="col-2 col-sm-2 col-md-1 img-fluid p-2"
+                    class="col-2 col-sm-2 col-md-1 img-fluid p-3"
                     :src="'https://img.scryfall.com/sets/'+this.set.setCode+'.svg'"
                 >
             </div>

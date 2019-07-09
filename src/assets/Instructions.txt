@@ -1,0 +1,35 @@
+This tool is designed to streamline the deck building process at your LGS.
+To get a sorted list of sets your cards have been printed in, simply copy and paste your decklist into this form in one of the formats below.
+
+If the set binder you are looking in doesn't have a card you are looking for, or you don't want that particular printing, use the yellow "Remove Printing" button to remove only that instance of the card.
+When you find a card, or want to remove it from the decklist entirely, use the green "Card Found" button to clear all instances of that card.
+
+If you edit the decklist, all of the data will be fetched again, so any printings or cards you have removed will reappear.
+
+**Note: Basic lands are automatically removed from the search
+**Note: Commander Sets have been grouped together
+**Note: Only paper, non-promo printings are shown
+
+Acceptable Formats:
+
+Forest
+Mox Emerald
+Birds of Paradise
+Wrath of God
+Fact or Fiction
+etc..
+
+12 Forest
+3 Mox Emerald
+2 Birds of Paradise
+2 Wrath of God
+1 Fact or Fiction
+etc..
+
+12x Forest
+3x Mox Emerald
+2x Birds of Paradise
+2x Wrath of God
+1x Fact or Fiction
+etc..
+
