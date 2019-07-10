@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <div class="card mx-auto w-75 mt-2 py-1 bg-secondary border-dark text-light">
+        <div class="card mx-auto w-50 mt-2 py-1 bg-secondary border-dark text-light">
             <h1 class="text-center">MTG Binder Finder</h1>
         </div>
 
@@ -164,6 +164,9 @@ export default {
                     card.set_type == "box" ||
                     card.set_type == "spellbook" ||
                     card.set_type == "premium_deck" ||
+                    card.set == "sum" ||
+                    card.set == "4bb" ||
+                    card.set == "fbb" ||
                     !card.games.includes("paper")
                 ) {
                     continue;
