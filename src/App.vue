@@ -1,5 +1,7 @@
 <template>
     <div id="app">
+        <cookie-consent class="justify-self-center"/>
+
         <div class="card mx-auto w-50 mt-2 py-1 bg-secondary border-dark text-light">
             <h1 class="text-center">MTG Binder Finder</h1>
         </div>
@@ -33,6 +35,9 @@ import axios from "axios";
 import Vue from "vue";
 import mtgparser from "mtg-parser";
 import $ from "jquery";
+import styles from "vue-cookieconsent-component/src/scss/_cookie-consent.scss";
+import bottom from "vue-cookieconsent-component/src/scss/_cookie-consent-bottom.scss";
+import trans from "vue-cookieconsent-component/src/scss/_cookie-consent-transition.scss";
 
 export default {
     name: "app",
