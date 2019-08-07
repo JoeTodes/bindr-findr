@@ -20,6 +20,7 @@
     "popper.js": "^1.15.0",
     "postcss-import": "^12.0.1",
     "postcss-url": "^8.0.0",
+    "prerender-spa-plugin": "^3.4.0",
     "sass-loader": "^7.1.0",
     "vue": "^2.6.10",
     "vue-cookieconsent-component": "^1.2.0"
