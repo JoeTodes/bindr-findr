@@ -25,7 +25,7 @@
             </button>
           </div>
           <div class="modal-body">
-            <form id="feedback" name="feedback" data-netlify="true">
+            <form id="feedback" method="POST" name="feedback" data-netlify="true">
               <div class="form-group">
                 <label for="userEmail">Email Address</label>
                 <input type="email" class="form-control" name="userEmail" id="userEmail" />
