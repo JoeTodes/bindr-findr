@@ -14,11 +14,12 @@
       >Re-Sort</button>
     </div>
 
-    <div id="accordion">
+    <div id="accordion" class="mb-5">
       <div v-for="set in sortedSetNames" :key="set">
         <set-view @rem-card="removeAllCards" @rem-printing="removePrinting" :set="sets[set]"></set-view>
       </div>
     </div>
+    <Feedback />
   </div>
 </template>
 
@@ -32,12 +33,14 @@ import $ from "jquery";
 import styles from "vue-cookieconsent-component/src/scss/_cookie-consent.scss";
 import bottom from "vue-cookieconsent-component/src/scss/_cookie-consent-bottom.scss";
 import trans from "vue-cookieconsent-component/src/scss/_cookie-consent-transition.scss";
+import Feedback from "./components/Feeback.vue";
 
 export default {
   name: "app",
   components: {
     Submission,
-    SetView
+    SetView,
+    Feedback
   },
   data() {
     return {
