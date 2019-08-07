@@ -28,7 +28,7 @@
             <form id="feedback" name="feedback" data-netlify="true">
               <div class="form-group">
                 <label for="userEmail">Email Address</label>
-                <input type="email" class="form-control" id="userEmail" />
+                <input type="email" class="form-control" name="userEmail" id="userEmail" />
                 <small class="form-text text-muted">**optional</small>
               </div>
               <div class="form-group">
@@ -36,6 +36,7 @@
                 <textarea
                   class="form-control"
                   id="issue"
+                  name="issue"
                   rows="8"
                   placeholder="Please describe your issue in detail, or any feedback you might have for the site"
                 ></textarea>
