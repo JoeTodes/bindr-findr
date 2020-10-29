@@ -25,7 +25,14 @@
             </button>
           </div>
           <div class="modal-body">
-            <form id="feedback" method="POST" name="feedback" data-netlify="true">
+            <form
+              id="feedback"
+              method="post"
+              name="feedback"
+              data-netlify="true"
+              data-netlify-honeypot="bot-field"
+            >
+              <input type="hidden" name="form-name" value="feedback" />
               <div class="form-group">
                 <label for="userEmail">Email Address</label>
                 <input type="email" class="form-control" name="userEmail" id="userEmail" />
