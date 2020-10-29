@@ -1,26 +1,35 @@
 <template>
-  <div id="app">
-    <cookie-consent class="justify-self-center" />
+    <div id="app">
+        <cookie-consent class="justify-self-center" />
 
-    <h1 class="text-white text-center display-1 my-5">MTG Binder Finder</h1>
+        <h1 class="text-white text-center display-1 my-5">MTG Binder Finder</h1>
 
-    <Submission @cards-submitted="onSubmit" v-model="cardListText"></Submission>
+        <Submission
+            @cards-submitted="onSubmit"
+            v-model="cardListText"
+        ></Submission>
 
-    <div class="mx-auto w-75">
-      <button
-        @click="sortSets"
-        v-if="cardsReceived"
-        class="mb-2 btn btn-warning border-dark justify-self-right"
-      >Re-Sort</button>
+        <div class="mx-auto w-75">
+            <button
+                @click="sortSets"
+                v-if="cardsReceived"
+                class="mb-2 btn btn-warning border-dark justify-self-right"
+            >
+                Re-Sort
+            </button>
+        </div>
+
+        <div id="accordion" class="mb-5">
+            <div v-for="set in sortedSetNames" :key="set">
+                <set-view
+                    @rem-card="removeAllCards"
+                    @rem-printing="removePrinting"
+                    :set="sets[set]"
+                ></set-view>
+            </div>
+        </div>
+        <Feedback />
     </div>
-
-    <div id="accordion" class="mb-5">
-      <div v-for="set in sortedSetNames" :key="set">
-        <set-view @rem-card="removeAllCards" @rem-printing="removePrinting" :set="sets[set]"></set-view>
-      </div>
-    </div>
-    <Feedback />
-  </div>
 </template>
 
 <script>
@@ -36,199 +45,211 @@ import trans from "vue-cookieconsent-component/src/scss/_cookie-consent-transiti
 import Feedback from "./components/Feeback.vue";
 
 export default {
-  name: "app",
-  components: {
-    Submission,
-    SetView,
-    Feedback
-  },
-  data() {
-    return {
-      cardListText: "",
-      cardName: "",
-      cardNames: "",
-      queryResult: "",
-      sets: {},
-      parsedCards: {},
-      queryText: "",
-      sortedSetNames: []
-    };
-  },
-  mounted: function() {
-    $('[data-toggle="popover"]').popover({
-      trigger: "focus",
-      html: true
-    });
-  },
-  computed: {
-    cardsReceived: function() {
-      return Object.keys(this.sets).length > 1;
-    }
-  },
-  methods: {
-    onSubmit() {
-      this.clearSets();
-      this.parseInput();
-      this.getData();
+    name: "app",
+    components: {
+        Submission,
+        SetView,
+        Feedback,
     },
-    clearSets() {
-      Object.keys(this.sets).forEach(setCode => {
-        var set = this.sets[setCode];
-        if (set.cards) {
-          set.cards = [];
-        }
-      });
+    data() {
+        return {
+            cardListText: "",
+            cardName: "",
+            cardNames: "",
+            queryResult: "",
+            sets: {},
+            parsedCards: {},
+            queryText: "",
+            sortedSetNames: [],
+        };
     },
-    parseInput() {
-      this.cardNames = this.cardListText;
-      if (isNaN(this.cardNames[0])) {
-        this.cardNames = "1 " + this.cardNames;
-        this.cardNames = this.cardNames.replace(/(?:\r\n|\r|\n)/g, "\n1 ");
-      }
-      this.parsedCards = mtgparser(this.cardNames, "mtgo");
-      this.parsedCards["cardArrays"] = [];
-      this.splitCardArray(this.parsedCards.cards, this.parsedCards.cardArrays);
-      //TODO
+    mounted: function () {
+        $('[data-toggle="popover"]').popover({
+            trigger: "focus",
+            html: true,
+        });
     },
-    splitCardArray(array, dest) {
-      if (array.length > 45) {
-        dest.push(array.slice(0, 45));
-        this.splitCardArray(array.slice(45), dest);
-      } else {
-        dest.push(array);
-      }
+    computed: {
+        cardsReceived: function () {
+            return Object.keys(this.sets).length > 1;
+        },
     },
-    getData() {
-      this.parsedCards.cardArrays.forEach((array, j) => {
-        this.queryText = 'https://api.scryfall.com/cards/search?q=!"';
-
-        array.forEach((el, i) => {
-          if (
-            !(
-              el.name.toUpperCase() === "MOUNTAIN" ||
-              el.name.toUpperCase() === "PLAINS" ||
-              el.name.toUpperCase() === "ISLAND" ||
-              el.name.toUpperCase() === "SWAMP" ||
-              el.name.toUpperCase() === "FOREST"
-            )
-          ) {
-            if (el.name.length > 0) {
-              this.queryText += el.name.replace(/ /g, "+");
-              if (
-                j + 1 < this.parsedCards.cardArrays.length ||
-                i + 1 < array.length
-              ) {
-                this.queryText += '"+OR+!"';
-              }
+    methods: {
+        onSubmit() {
+            this.clearSets();
+            this.parseInput();
+            this.getData();
+        },
+        clearSets() {
+            Object.keys(this.sets).forEach((setCode) => {
+                var set = this.sets[setCode];
+                if (set.cards) {
+                    set.cards = [];
+                }
+            });
+        },
+        parseInput() {
+            this.cardNames = this.cardListText;
+            if (isNaN(this.cardNames[0])) {
+                this.cardNames = "1 " + this.cardNames;
+                this.cardNames = this.cardNames.replace(
+                    /(?:\r\n|\r|\n)/g,
+                    "\n1 "
+                );
             }
-          }
-        });
+            this.parsedCards = mtgparser(this.cardNames, "mtgo");
+            this.parsedCards["cardArrays"] = [];
+            this.splitCardArray(
+                this.parsedCards.cards,
+                this.parsedCards.cardArrays
+            );
+            //TODO
+        },
+        splitCardArray(array, dest) {
+            if (array.length > 45) {
+                dest.push(array.slice(0, 45));
+                this.splitCardArray(array.slice(45), dest);
+            } else {
+                dest.push(array);
+            }
+        },
+        getData() {
+            this.parsedCards.cardArrays.forEach((array, j) => {
+                this.queryText = 'https://api.scryfall.com/cards/search?q=!"';
 
-        this.queryText += '"&unique=prints&order=color';
+                array.forEach((el, i) => {
+                    if (
+                        !(
+                            el.name.toUpperCase() === "MOUNTAIN" ||
+                            el.name.toUpperCase() === "PLAINS" ||
+                            el.name.toUpperCase() === "ISLAND" ||
+                            el.name.toUpperCase() === "SWAMP" ||
+                            el.name.toUpperCase() === "FOREST"
+                        )
+                    ) {
+                        if (el.name.length > 0) {
+                            this.queryText += el.name.replace(/ /g, "+");
+                            if (
+                                j + 1 < this.parsedCards.cardArrays.length ||
+                                i + 1 < array.length
+                            ) {
+                                this.queryText += '"+OR+!"';
+                            }
+                        }
+                    }
+                });
 
-        axios
-          .get(this.queryText)
-          .then(res => {
-            this.queryResult = res;
-            this.populateSets();
-            this.getHasMore();
-          })
-          .catch(err => {
-            // handle error
-            console.log(err);
-          });
-      });
-    },
-    getHasMore() {
-      if (this.queryResult.data.has_more) {
-        axios.get(this.queryResult.data.next_page).then(res => {
-          this.queryResult = res;
-          this.populateSets();
-          this.getHasMore();
-          //this.sortSets();
-        });
-      } else {
-        this.sortSets();
-      }
-    },
-    populateSets() {
-      for (const card of this.queryResult.data.data) {
-        if (
-          card.promo ||
-          card.set_type == "planechase" ||
-          card.set_type == "duel_deck" ||
-          card.set_type == "box" ||
-          card.set_type == "spellbook" ||
-          card.set_type == "premium_deck" ||
-          card.set == "sum" ||
-          card.set == "4bb" ||
-          card.set == "fbb" ||
-          !card.games.includes("paper")
-        ) {
-          continue;
-        }
+                this.queryText += '"&unique=prints&order=color';
 
-        if (card.set_type == "commander") {
-          card.set = "c18";
-          card.set_name = "Commander Sets";
-        }
+                axios
+                    .get(this.queryText)
+                    .then((res) => {
+                        this.queryResult = res;
+                        this.populateSets();
+                        this.getHasMore();
+                    })
+                    .catch((err) => {
+                        // handle error
+                        console.log(err);
+                    });
+            });
+        },
+        getHasMore() {
+            if (this.queryResult.data.has_more) {
+                axios.get(this.queryResult.data.next_page).then((res) => {
+                    this.queryResult = res;
+                    this.populateSets();
+                    this.getHasMore();
+                    //this.sortSets();
+                });
+            } else {
+                this.sortSets();
+            }
+        },
+        populateSets() {
+            for (const card of this.queryResult.data.data) {
+                if (
+                    card.promo ||
+                    card.set_type == "planechase" ||
+                    card.set_type == "duel_deck" ||
+                    card.set_type == "box" ||
+                    card.set_type == "spellbook" ||
+                    card.set_type == "premium_deck" ||
+                    card.set == "sum" ||
+                    card.set == "4bb" ||
+                    card.set == "fbb" ||
+                    card.set == "mb1" ||
+                    !card.games.includes("paper")
+                ) {
+                    continue;
+                }
 
-        if (!Object.keys(this.sets).includes(card.set)) {
-          this.$set(this.sets, card.set, {
-            setCode: card.set,
-            setName: card.set_name,
-            cards: [card],
-            setUri: card.set_uri
-          });
-        } else {
-          if (!this.setContainsCardName(this.sets[card.set], card.name)) {
-            this.sets[card.set].cards.push(card);
-          }
-        }
-      }
-    },
-    sortSets() {
-      this.sortedSetNames = Object.keys(this.sets);
+                if (card.set_type == "commander") {
+                    card.set = "c18";
+                    card.set_name = "Commander Sets";
+                }
 
-      this.sortedSetNames.sort((a, b) => {
-        var aLen = this.sets[a].cards.length;
-        var bLen = this.sets[b].cards.length;
-        //console.log("a: " + this.aLen + " b: " + this.bLen);
-        return bLen - aLen;
-      });
-      this.$forceUpdate;
-    },
-    setContainsCardName(set, cardName) {
-      for (let index = 0; index < set.cards.length; index++) {
-        if (set.cards[index].name === cardName) {
-          return true;
-        }
-      }
+                if (!Object.keys(this.sets).includes(card.set)) {
+                    this.$set(this.sets, card.set, {
+                        setCode: card.set,
+                        setName: card.set_name,
+                        cards: [card],
+                        setUri: card.set_uri,
+                    });
+                } else {
+                    if (
+                        !this.setContainsCardName(
+                            this.sets[card.set],
+                            card.name
+                        )
+                    ) {
+                        this.sets[card.set].cards.push(card);
+                    }
+                }
+            }
+        },
+        sortSets() {
+            this.sortedSetNames = Object.keys(this.sets);
 
-      return false;
+            this.sortedSetNames.sort((a, b) => {
+                var aLen = this.sets[a].cards.length;
+                var bLen = this.sets[b].cards.length;
+                //console.log("a: " + this.aLen + " b: " + this.bLen);
+                return bLen - aLen;
+            });
+            this.$forceUpdate;
+        },
+        setContainsCardName(set, cardName) {
+            for (let index = 0; index < set.cards.length; index++) {
+                if (set.cards[index].name === cardName) {
+                    return true;
+                }
+            }
+
+            return false;
+        },
+        removePrinting(setCode, card) {
+            var index = this.sets[setCode].cards.indexOf(card);
+            if (index != -1) {
+                this.sets[setCode].cards.splice(index, 1);
+            }
+        },
+        removeAllCards(cardName) {
+            Object.keys(this.sets).forEach((setCode) => {
+                var set = this.sets[setCode];
+                for (var i = 0; i < set.cards.length; i++) {
+                    if (set.cards[i].name === cardName) {
+                        set.cards.splice(i, 1);
+                    }
+                }
+            });
+        },
     },
-    removePrinting(setCode, card) {
-      var index = this.sets[setCode].cards.indexOf(card);
-      if (index != -1) {
-        this.sets[setCode].cards.splice(index, 1);
-      }
-    },
-    removeAllCards(cardName) {
-      Object.keys(this.sets).forEach(setCode => {
-        var set = this.sets[setCode];
-        for (var i = 0; i < set.cards.length; i++) {
-          if (set.cards[i].name === cardName) {
-            set.cards.splice(i, 1);
-          }
-        }
-      });
-    }
-  }
 };
 </script>
 
 <style>
 .popover {
-  max-width: 50%;
+    max-width: 50%;
 }
 </style>
