@@ -15,7 +15,7 @@
     "jquery": "3.4.1",
     "js-cookie": "^2.2.0",
     "mtg-parser": "^0.1.0",
-    "node-sass": "^4.12.0",
+    "node-sass": "^7.0.0",
     "open-iconic": "^1.1.1",
     "popper.js": "^1.15.0",
     "postcss-import": "^12.0.1",
